@@ -31,10 +31,21 @@ const HandleObj: any = new Handle();
 
 io.on('connection', async (socket: Socket) => {
     console.log(`Socket connected: ${socket.id}`);
+    //Adding user to user list.
     await HandleObj.addUsertoList(socket.id);
+
+    //User is ready to join.
+    socket.on('ready', async () => {
+        //Adding user to queue.
+        await HandleObj.addUsertoQueue(socket.id);
+        //code to check the queue and run logic hereonwards.
+    })
+
+
+    //Handle when user gets disconnected.
     socket.on('disconnect', async () => {
         console.log(`Socket disconnected: ${socket.id}`);
-        await HandleObj.removeUserfromList(socket.id);
+        await HandleObj.extinctUser(socket.id); //removes user from everywhere.
     });
 })
 

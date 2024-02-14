@@ -10,17 +10,30 @@ export default class Handle {
         this.queue_1f = [];
         this.queue_2f = [];
     }
+    async extinctUser(id: string) {
+        await this.removeUserfromList(id);
+        await this.removeUsertoQueue(id);
+        await this.removeUserfromSplittedQueue(id);
+    }
     async addUsertoList(id: string) {
         this.users.push(id);
     }
     async removeUserfromList(id: string) {
-        this.users = this.users.filter(userId => userId !== id);
+        if (this.users.includes(id)) {
+            this.users = this.users.filter(userId => userId !== id);
+        } else {
+            NaN;
+        }
     }
     async addUsertoQueue(id: string) {
         this.queue.push(id);
     }
     async removeUsertoQueue(id: string) {
-        this.queue = this.queue.filter(userId => userId !== id);
+        if (this.queue.includes(id)) {
+            this.queue = this.queue.filter(userId => userId !== id);
+        } else {
+            NaN;
+        }
     }
 
     async isQueueEven() {
