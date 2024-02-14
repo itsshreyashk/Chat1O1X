@@ -24,7 +24,7 @@ export default class Handle {
     }
 
     async isQueueEven() {
-        return this.queue.length % 2 === 0 && this.queue.length > 0;
+        return this.queue.length % 2 === 0 && this.queue.length >= 4;
     }
     async splitQueue() {
         const middlePoint = this.queue.length / 2;

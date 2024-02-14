@@ -29,10 +29,12 @@ app.use(cors({
 
 const HandleObj: any = new Handle();
 
-io.on('connection', (socket: Socket) => {
+io.on('connection', async (socket: Socket) => {
     console.log(`Socket connected: ${socket.id}`);
+    await HandleObj.addUsertoList(socket.id);
     socket.on('disconnect', async () => {
         console.log(`Socket disconnected: ${socket.id}`);
+        await HandleObj.removeUserfromList(socket.id);
     });
 })
 
