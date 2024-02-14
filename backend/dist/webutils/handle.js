@@ -16,6 +16,13 @@ class Handle {
         this.queue_1f = [];
         this.queue_2f = [];
     }
+    extinctUser(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.removeUserfromList(id);
+            yield this.removeUsertoQueue(id);
+            yield this.removeUserfromSplittedQueue(id);
+        });
+    }
     addUsertoList(id) {
         return __awaiter(this, void 0, void 0, function* () {
             this.users.push(id);
@@ -23,7 +30,12 @@ class Handle {
     }
     removeUserfromList(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.users = this.users.filter(userId => userId !== id);
+            if (this.users.includes(id)) {
+                this.users = this.users.filter(userId => userId !== id);
+            }
+            else {
+                NaN;
+            }
         });
     }
     addUsertoQueue(id) {
@@ -33,12 +45,17 @@ class Handle {
     }
     removeUsertoQueue(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.queue = this.queue.filter(userId => userId !== id);
+            if (this.queue.includes(id)) {
+                this.queue = this.queue.filter(userId => userId !== id);
+            }
+            else {
+                NaN;
+            }
         });
     }
     isQueueEven() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.queue.length % 2 === 0 && this.queue.length > 0;
+            return this.queue.length % 2 === 0 && this.queue.length >= 4;
         });
     }
     splitQueue() {

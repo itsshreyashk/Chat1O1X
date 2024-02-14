@@ -35,12 +35,22 @@ app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 }));
 const HandleObj = new handle_1.default();
-io.on('connection', (socket) => {
+io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Socket connected: ${socket.id}`);
+    //Adding user to user list.
+    yield HandleObj.addUsertoList(socket.id);
+    //User is ready to join.
+    socket.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
+        //Adding user to queue.
+        yield HandleObj.addUsertoQueue(socket.id);
+        //code to check the queue and run logic hereonwards.
+    }));
+    //Handle when user gets disconnected.
     socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Socket disconnected: ${socket.id}`);
+        yield HandleObj.extinctUser(socket.id); //removes user from everywhere.
     }));
-});
+}));
 // Start the server and listen on the specified port
 server.listen(PORT, () => {
     // Log a message indicating the server is listening
