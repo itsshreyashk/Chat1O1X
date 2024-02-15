@@ -30,7 +30,6 @@ const Capsule: React.FC<CapProps> = ({ msgs }) => {
             <div className="flex justify-center">
                 <div className="h-[88vh] w-full pt-20 px-2 max-w-[1200px] overflow-y-auto">
                     {/* Msgs rendering part */}
-                    {/* Dynamic rendering goes here */}
                 </div>
             </div>
 
