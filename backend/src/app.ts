@@ -62,8 +62,16 @@ io.on('connection', async (socket: Socket) => {
         socket.join(roomName);
         socket.emit('join', roomName);
     });
+    
+    socket.on('emitMsg', async (data: any) => {
+        console.log("Msg");
 
-
+        const room: string = data.roomName;
+        io.to(room).emit('getMsg', {
+            username: data.username,
+            msg: data.msg,
+        });
+    });
 
     //Handle when user gets disconnected.
     socket.on('disconnect', async () => {

@@ -67,6 +67,14 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
         socket.join(roomName);
         socket.emit('join', roomName);
     }));
+    socket.on('emitMsg', (data) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("Msg");
+        const room = data.roomName;
+        io.to(room).emit('getMsg', {
+            username: data.username,
+            msg: data.msg,
+        });
+    }));
     //Handle when user gets disconnected.
     socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Socket disconnected: ${socket.id}`);

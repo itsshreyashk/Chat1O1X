@@ -9,7 +9,6 @@ const Home: React.FC<HomeProps> = ({ status, usernameRef, readyJoin }) => {
     React.useEffect(() => {
         document.title = "Home";
         return () => {
-            // Cleanup logic if needed
         }
     }, [])
 
