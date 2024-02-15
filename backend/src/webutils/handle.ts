@@ -12,11 +12,14 @@ export default class Handle {
     }
     async extinctUser(id: string) {
         await this.removeUserfromList(id);
-        await this.removeUsertoQueue(id);
+        await this.removeUserfromQueue(id);
         await this.removeUserfromSplittedQueue(id);
     }
     async addUsertoList(id: string) {
         this.users.push(id);
+    }
+    async checkUserinList(id: string) {
+        return this.users.includes(id);
     }
     async removeUserfromList(id: string) {
         if (this.users.includes(id)) {
@@ -28,32 +31,38 @@ export default class Handle {
     async addUsertoQueue(id: string) {
         this.queue.push(id);
     }
-    async removeUsertoQueue(id: string) {
+    async removeUserfromQueue(id: string) {
         if (this.queue.includes(id)) {
             this.queue = this.queue.filter(userId => userId !== id);
         } else {
             NaN;
         }
     }
-
     async isQueueEven() {
-        return this.queue.length % 2 === 0 && this.queue.length >= 4;
+        return this.queue.length % 2 === 0 && this.queue.length >= 2;
     }
     async splitQueue() {
         const middlePoint = this.queue.length / 2;
         this.queue_1f = this.queue_1f.concat(this.queue.slice(0, middlePoint));
         this.queue_2f = this.queue_2f.concat(this.queue.slice(middlePoint));
-
         await this.removeNullElements();
     }
     async getMatch(id: string) {
-        const indexInQueue1f = this.queue_1f.indexOf(id);
-        if (indexInQueue1f !== -1 && indexInQueue1f < this.queue_2f.length) {
-            return this.queue_2f[indexInQueue1f];
-        } else {
-            return null; // No match found
+        let indexInQueue1f = this.queue_1f.indexOf(id);
+        let indexInQueue2f = this.queue_2f.indexOf(id);
+
+        if (indexInQueue1f !== -1) {
+            if (indexInQueue1f < this.queue_2f.length) {
+                return this.queue_2f[indexInQueue1f];
+            }
+        } else if (indexInQueue2f !== -1) {
+            if (indexInQueue2f < this.queue_1f.length) {
+                return this.queue_1f[indexInQueue2f];
+            }
         }
+        return null; // Handle the case where a match is not found
     }
+
     async removeUserfromSplittedQueue(id: string) {
         if (this.queue_1f.includes(id)) {
             this.queue_1f = this.queue_1f.filter(userId => userId !== id);

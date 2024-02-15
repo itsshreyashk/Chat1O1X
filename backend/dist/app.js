@@ -36,19 +36,55 @@ app.use((0, cors_1.default)({
 }));
 const HandleObj = new handle_1.default();
 io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
+    let mymatch;
+    let status;
+    let roomName;
     console.log(`Socket connected: ${socket.id}`);
     //Adding user to user list.
     yield HandleObj.addUsertoList(socket.id);
     //User is ready to join.
     socket.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
         //Adding user to queue.
-        yield HandleObj.addUsertoQueue(socket.id);
-        //code to check the queue and run logic hereonwards.
+        console.log("User ready to join.");
+        if (yield HandleObj.checkUserinList(socket.id)) {
+            console.log("User exists.");
+            yield HandleObj.addUsertoQueue(socket.id);
+            status = yield HandleObj.isQueueEven();
+            if (status) {
+                yield HandleObj.splitQueue();
+                console.log("Queue is even and splitted.");
+                mymatch = yield HandleObj.getMatch(socket.id);
+                console.log(mymatch);
+                roomName = `${socket.id}-${mymatch}`;
+                console.log('Found match.');
+                socket.join(roomName);
+                socket.emit('join', roomName);
+                io.to(mymatch).emit('join', roomName);
+            }
+            else {
+                console.log("Queue is not sufficient.");
+                NaN;
+            }
+        }
+        else {
+            console.log("User does not exist.");
+            NaN;
+        }
+    }));
+    socket.on('join', (roomName) => __awaiter(void 0, void 0, void 0, function* () {
+        socket.join(roomName);
+        socket.emit('join', roomName);
     }));
     //Handle when user gets disconnected.
     socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Socket disconnected: ${socket.id}`);
         yield HandleObj.extinctUser(socket.id); //removes user from everywhere.
+        if (mymatch) {
+            io.to(mymatch).emit('quit');
+        }
+        else {
+            NaN;
+        }
     }));
 }));
 // Start the server and listen on the specified port

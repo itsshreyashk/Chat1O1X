@@ -30,6 +30,9 @@ app.use(cors({
 const HandleObj: any = new Handle();
 
 io.on('connection', async (socket: Socket) => {
+    let mymatch: string;
+    let status: boolean;
+    let roomName: string;
     console.log(`Socket connected: ${socket.id}`);
     //Adding user to user list.
     await HandleObj.addUsertoList(socket.id);
@@ -37,17 +40,38 @@ io.on('connection', async (socket: Socket) => {
     //User is ready to join.
     socket.on('ready', async () => {
         //Adding user to queue.
-        await HandleObj.addUsertoQueue(socket.id);
-        //code to check the queue and run logic hereonwards.
+        if (await HandleObj.checkUserinList(socket.id)) {
+            await HandleObj.addUsertoQueue(socket.id);
+            status = await HandleObj.isQueueEven();
+            if (status) {
+                await HandleObj.splitQueue();
+                mymatch = await HandleObj.getMatch(socket.id);
+                socket.join(roomName);
+                socket.emit('join', roomName)
+                io.to(mymatch).emit('join', roomName);
+            } else {
+                NaN;
+            }
+        } else {
+            NaN;
+        }
+
     });
 
+    socket.on('join', async (roomName: string) => {
+        socket.join(roomName);
+        socket.emit('join', roomName);
+    })
 
     //Handle when user gets disconnected.
     socket.on('disconnect', async () => {
         console.log(`Socket disconnected: ${socket.id}`);
         await HandleObj.extinctUser(socket.id); //removes user from everywhere.
+        if (mymatch) {
+            io.to(mymatch).emit('quit');
+        } else { NaN }
     });
-})
+});
 
 // Start the server and listen on the specified port
 server.listen(PORT, () => {

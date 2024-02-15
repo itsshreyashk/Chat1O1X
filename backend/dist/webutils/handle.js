@@ -19,13 +19,18 @@ class Handle {
     extinctUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.removeUserfromList(id);
-            yield this.removeUsertoQueue(id);
+            yield this.removeUserfromQueue(id);
             yield this.removeUserfromSplittedQueue(id);
         });
     }
     addUsertoList(id) {
         return __awaiter(this, void 0, void 0, function* () {
             this.users.push(id);
+        });
+    }
+    checkUserinList(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.users.includes(id);
         });
     }
     removeUserfromList(id) {
@@ -43,7 +48,7 @@ class Handle {
             this.queue.push(id);
         });
     }
-    removeUsertoQueue(id) {
+    removeUserfromQueue(id) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.queue.includes(id)) {
                 this.queue = this.queue.filter(userId => userId !== id);
@@ -55,7 +60,7 @@ class Handle {
     }
     isQueueEven() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.queue.length % 2 === 0 && this.queue.length >= 4;
+            return this.queue.length % 2 === 0 && this.queue.length >= 2;
         });
     }
     splitQueue() {
@@ -63,18 +68,26 @@ class Handle {
             const middlePoint = this.queue.length / 2;
             this.queue_1f = this.queue_1f.concat(this.queue.slice(0, middlePoint));
             this.queue_2f = this.queue_2f.concat(this.queue.slice(middlePoint));
+            console.log(this.queue_1f);
+            console.log(this.queue_2f);
             yield this.removeNullElements();
         });
     }
     getMatch(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const indexInQueue1f = this.queue_1f.indexOf(id);
-            if (indexInQueue1f !== -1 && indexInQueue1f < this.queue_2f.length) {
-                return this.queue_2f[indexInQueue1f];
+            let indexInQueue1f = this.queue_1f.indexOf(id);
+            let indexInQueue2f = this.queue_2f.indexOf(id);
+            if (indexInQueue1f !== -1) {
+                if (indexInQueue1f < this.queue_2f.length) {
+                    return this.queue_2f[indexInQueue1f];
+                }
             }
-            else {
-                return null; // No match found
+            else if (indexInQueue2f !== -1) {
+                if (indexInQueue2f < this.queue_1f.length) {
+                    return this.queue_1f[indexInQueue2f];
+                }
             }
+            return null; // Handle the case where a match is not found
         });
     }
     removeUserfromSplittedQueue(id) {
