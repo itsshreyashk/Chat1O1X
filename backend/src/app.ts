@@ -39,7 +39,7 @@ io.on('connection', async (socket: Socket) => {
         //Adding user to queue.
         await HandleObj.addUsertoQueue(socket.id);
         //code to check the queue and run logic hereonwards.
-    })
+    });
 
 
     //Handle when user gets disconnected.
