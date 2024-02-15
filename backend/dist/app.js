@@ -45,29 +45,21 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     //User is ready to join.
     socket.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
         //Adding user to queue.
-        console.log("User ready to join.");
         if (yield HandleObj.checkUserinList(socket.id)) {
-            console.log("User exists.");
             yield HandleObj.addUsertoQueue(socket.id);
             status = yield HandleObj.isQueueEven();
             if (status) {
                 yield HandleObj.splitQueue();
-                console.log("Queue is even and splitted.");
                 mymatch = yield HandleObj.getMatch(socket.id);
-                console.log(mymatch);
-                roomName = `${socket.id}-${mymatch}`;
-                console.log('Found match.');
                 socket.join(roomName);
                 socket.emit('join', roomName);
                 io.to(mymatch).emit('join', roomName);
             }
             else {
-                console.log("Queue is not sufficient.");
                 NaN;
             }
         }
         else {
-            console.log("User does not exist.");
             NaN;
         }
     }));

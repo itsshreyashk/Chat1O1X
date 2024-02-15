@@ -40,6 +40,7 @@ const Capsule: React.FC<CapProps> = ({ msgs }) => {
                             if (event.key === 'Enter') {
                                 event.preventDefault();
                                 // Handle enter key press event
+                                
                             }
                         }} />
                         <button type="button" className="px-4 py-2 rounded-r-full text-sm border-r border-t border-b font-bold active:opacity-70" onClick={() => {

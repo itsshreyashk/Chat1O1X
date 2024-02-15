@@ -61,7 +61,9 @@ io.on('connection', async (socket: Socket) => {
     socket.on('join', async (roomName: string) => {
         socket.join(roomName);
         socket.emit('join', roomName);
-    })
+    });
+
+
 
     //Handle when user gets disconnected.
     socket.on('disconnect', async () => {

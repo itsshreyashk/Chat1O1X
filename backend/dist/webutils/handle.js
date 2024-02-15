@@ -68,8 +68,6 @@ class Handle {
             const middlePoint = this.queue.length / 2;
             this.queue_1f = this.queue_1f.concat(this.queue.slice(0, middlePoint));
             this.queue_2f = this.queue_2f.concat(this.queue.slice(middlePoint));
-            console.log(this.queue_1f);
-            console.log(this.queue_2f);
             yield this.removeNullElements();
         });
     }
