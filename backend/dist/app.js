@@ -78,6 +78,7 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     socket.on('next', (roomName) => __awaiter(void 0, void 0, void 0, function* () {
         socket.leave(roomName);
         yield HandleObj.removeUserfromSplittedQueue(socket.id);
+        yield HandleObj.addUsertoQueue(socket.id);
         // Also emit to the room.
         io.to(roomName).emit('next', roomName);
     }));
@@ -86,7 +87,7 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Socket disconnected: ${socket.id}`);
         yield HandleObj.extinctUser(socket.id); //removes user from everywhere.
         if (roomName) {
-            io.to(roomName).emit('quit');
+            io.to(roomName).emit('next', roomName);
         }
         else {
             NaN;

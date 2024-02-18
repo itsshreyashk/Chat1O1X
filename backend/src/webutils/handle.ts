@@ -49,6 +49,7 @@ export default class Handle {
         this.queue_1f = this.queue_1f.concat(this.queue.slice(0, middlePoint));
         this.queue_2f = this.queue_2f.concat(this.queue.slice(middlePoint));
         await this.removeNullElements();
+        this.queue = [];
     }
     async getMatch(id: string) {
         let indexInQueue1f = this.queue_1f.indexOf(id);

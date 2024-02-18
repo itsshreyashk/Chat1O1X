@@ -74,6 +74,7 @@ class Handle {
             this.queue_1f = this.queue_1f.concat(this.queue.slice(0, middlePoint));
             this.queue_2f = this.queue_2f.concat(this.queue.slice(middlePoint));
             yield this.removeNullElements();
+            this.queue = [];
         });
     }
     getMatch(id) {

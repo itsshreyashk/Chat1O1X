@@ -75,6 +75,7 @@ io.on('connection', async (socket: Socket) => {
     socket.on('next', async (roomName: string) => {
         socket.leave(roomName);
         await HandleObj.removeUserfromSplittedQueue(socket.id);
+        await HandleObj.addUsertoQueue(socket.id);
         // Also emit to the room.
         io.to(roomName).emit('next', roomName);
     })
@@ -84,7 +85,7 @@ io.on('connection', async (socket: Socket) => {
         console.log(`Socket disconnected: ${socket.id}`);
         await HandleObj.extinctUser(socket.id); //removes user from everywhere.
         if (roomName) {
-            io.to(roomName).emit('quit');
+            io.to(roomName).emit('next', roomName);
         } else { NaN }
     });
 });
