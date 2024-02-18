@@ -40,7 +40,7 @@ io.on('connection', async (socket: Socket) => {
     //User is ready to join.
     socket.on('ready', async () => {
         //Adding user to queue.
-        if (await HandleObj.checkUserinList(socket.id)) {
+        if (await HandleObj.checkUserinList(socket.id) && !(await HandleObj.checkUserinQueue(socket.id))) {
             await HandleObj.addUsertoQueue(socket.id);
             status = await HandleObj.isQueueEven();
             if (status) {
@@ -62,7 +62,7 @@ io.on('connection', async (socket: Socket) => {
         socket.join(roomName);
         socket.emit('join', roomName);
     });
-    
+
     socket.on('emitMsg', async (data: any) => {
         console.log("Msg");
 
@@ -72,13 +72,19 @@ io.on('connection', async (socket: Socket) => {
             msg: data.msg,
         });
     });
+    socket.on('next', async (roomName: string) => {
+        socket.leave(roomName);
+        await HandleObj.removeUserfromSplittedQueue(socket.id);
+        // Also emit to the room.
+        io.to(roomName).emit('next', roomName);
+    })
 
     //Handle when user gets disconnected.
     socket.on('disconnect', async () => {
         console.log(`Socket disconnected: ${socket.id}`);
         await HandleObj.extinctUser(socket.id); //removes user from everywhere.
-        if (mymatch) {
-            io.to(mymatch).emit('quit');
+        if (roomName) {
+            io.to(roomName).emit('quit');
         } else { NaN }
     });
 });

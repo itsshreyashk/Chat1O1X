@@ -13,12 +13,10 @@ const Manager: React.FC = () => {
     });
     const [page, setPage] = useState('home');
     const [status, setStatus] = useState('');
+    const [next, setNext] = useState('Next');
     const [msgs, setMsgs] = useState<Array<Message>>([]);
     const [roomName, setRoomName] = useState('');
     const usernameRef = useRef<HTMLInputElement>(null);
-
-    const leaveRef = useRef<HTMLButtonElement>(null); //leave
-    const nextRef = useRef<HTMLButtonElement>(null); //next
 
     const sendMsg = (username: string, msg: string) => {
         socket.emit('emitMsg', {
@@ -30,6 +28,10 @@ const Manager: React.FC = () => {
 
     const readyJoin = () => {
         socket.emit('ready');
+    }
+    const nextRoom = (roomName: string) => {
+        setNext('Connecting...');
+        socket.emit('next', roomName);
     }
     useEffect(() => {
         socket.on('join', (roomName: string) => {
@@ -45,12 +47,12 @@ const Manager: React.FC = () => {
                 { username: username, msg: msg }
             ]);
         });
-
-        socket.on('quit', () => {
-            //connects the user to another user.
-            socket.emit('ready');
+        socket.on('next', (roomName: string) => {
+            setNext('Next')
+            setMsgs([]);
+            socket.emit('next', roomName);
+            readyJoin();
         });
-
         return () => {
             socket.disconnect();
         }
@@ -59,7 +61,7 @@ const Manager: React.FC = () => {
     return (
         <>
             {page === 'home' && <Home usernameRef={usernameRef} readyJoin={readyJoin} status={status} />}
-            {page === 'room' && <Capsule msgs={msgs} sendMsg={sendMsg} />}
+            {page === 'room' && <Capsule msgs={msgs} sendMsg={sendMsg} nextRoom={nextRoom} next={next} />}
         </>
     );
 };

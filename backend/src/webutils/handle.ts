@@ -31,6 +31,9 @@ export default class Handle {
     async addUsertoQueue(id: string) {
         this.queue.push(id);
     }
+    async checkUserinQueue(id: string) {
+        return this.queue.includes(id);
+    }
     async removeUserfromQueue(id: string) {
         if (this.queue.includes(id)) {
             this.queue = this.queue.filter(userId => userId !== id);

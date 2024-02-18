@@ -7,8 +7,10 @@ interface msgProps {
 interface CapProps {
     msgs: msgProps[],
     sendMsg: any,
+    nextRoom: any,
+    next: string,
 }
-const Capsule: React.FC<CapProps> = ({ msgs, sendMsg }) => {
+const Capsule: React.FC<CapProps> = ({ msgs, sendMsg, nextRoom, next }) => {
     React.useEffect(() => {
         document.title = "Room";
     }, []);
@@ -23,7 +25,14 @@ const Capsule: React.FC<CapProps> = ({ msgs, sendMsg }) => {
                 </div>
                 <div className="w-full"></div>
                 <div className="w-full flex justify-end px-4 py-2 space-x-1">
-                    <button type="button" className="px-4 py-2 bg-red-600 active:bg-red-800 text-white rounded-full text-sm max-h-[max-content] max-w-[max-content]" onClick={() => { }}>
+                    <button type="button" className="px-4 py-2 bg-blue-600 active:bg-blue-800 text-white rounded-full text-sm max-h-[max-content] max-w-[max-content]" onClick={() => {
+                        nextRoom();
+
+                    }}>
+                        {next}
+                    </button>
+                    <button type="button" className="px-4 py-2 bg-red-600 active:bg-red-800 text-white rounded-full text-sm max-h-[max-content] max-w-[max-content]" onClick={() => {
+                    }}>
                         Leave
                     </button>
                 </div>

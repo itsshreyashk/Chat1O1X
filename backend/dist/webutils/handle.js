@@ -48,6 +48,11 @@ class Handle {
             this.queue.push(id);
         });
     }
+    checkUserinQueue(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.queue.includes(id);
+        });
+    }
     removeUserfromQueue(id) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.queue.includes(id)) {

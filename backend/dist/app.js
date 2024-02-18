@@ -45,7 +45,7 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     //User is ready to join.
     socket.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
         //Adding user to queue.
-        if (yield HandleObj.checkUserinList(socket.id)) {
+        if ((yield HandleObj.checkUserinList(socket.id)) && !(yield HandleObj.checkUserinQueue(socket.id))) {
             yield HandleObj.addUsertoQueue(socket.id);
             status = yield HandleObj.isQueueEven();
             if (status) {
@@ -75,12 +75,18 @@ io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
             msg: data.msg,
         });
     }));
+    socket.on('next', (roomName) => __awaiter(void 0, void 0, void 0, function* () {
+        socket.leave(roomName);
+        yield HandleObj.removeUserfromSplittedQueue(socket.id);
+        // Also emit to the room.
+        io.to(roomName).emit('next', roomName);
+    }));
     //Handle when user gets disconnected.
     socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Socket disconnected: ${socket.id}`);
         yield HandleObj.extinctUser(socket.id); //removes user from everywhere.
-        if (mymatch) {
-            io.to(mymatch).emit('quit');
+        if (roomName) {
+            io.to(roomName).emit('quit');
         }
         else {
             NaN;
